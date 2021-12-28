@@ -1,4 +1,4 @@
-package com.example.todolist;
+package com.example.todolist.Services;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,6 +12,8 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import com.example.todolist.MainActivity;
+import com.example.todolist.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -22,7 +24,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.e("newToken", s);
         getSharedPreferences("_", MODE_PRIVATE).edit().putString("fb", s).apply();
     }
-
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
