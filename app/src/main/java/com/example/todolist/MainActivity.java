@@ -6,6 +6,11 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+
+import com.example.todolist.Model.CreateNotification;
+import com.example.todolist.Model.GetNotification;
+import com.example.todolist.Rest.ApiClient;
+import com.example.todolist.Rest.ApiInterface.Notification;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -35,12 +40,19 @@ import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static java.util.Calendar.MINUTE;
 
 public class MainActivity extends AppCompatActivity {
 
     private ListView itemsListView;
+
+    Notification mApiInterfaceNotification;
     private FloatingActionButton fab;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.3F);
     private static final String TAG = "MainActivity";

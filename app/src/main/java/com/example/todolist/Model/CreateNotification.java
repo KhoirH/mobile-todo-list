@@ -2,8 +2,7 @@ package com.example.todolist.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-
-public class CreateUpdateDeleteTodolist {
+public class CreateNotification {
     @SerializedName("status")
     String status;
 

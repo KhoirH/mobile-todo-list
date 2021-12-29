@@ -8,8 +8,7 @@ public class Notification {
     @SerializedName("secret")
     private String secret;
 
-    public Notification(int id, String secret) {
-        this.id = id;
+    public Notification(String secret) {
         this.secret = secret;
     }
 

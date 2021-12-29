@@ -13,15 +13,40 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.example.todolist.MainActivity;
+import com.example.todolist.Model.CreateNotification;
 import com.example.todolist.R;
+import com.example.todolist.Rest.ApiClient;
+import com.example.todolist.Rest.ApiInterface.Notification;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    Notification mApiNotification;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        mApiNotification = ApiClient.getClient().create(Notification.class);
+    }
+
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
-        Log.e("newToken", s);
+        Call<CreateNotification> createNotificationCall = mApiNotification.createNotification(new com.example.todolist.Model.Notification(s));
+        createNotificationCall.enqueue(new Callback<CreateNotification>() {
+            @Override
+            public void onResponse(Call<CreateNotification> call, Response<CreateNotification> response) {
+            }
+
+            @Override
+            public void onFailure(Call<CreateNotification> call, Throwable t) {
+            }
+        });
         getSharedPreferences("_", MODE_PRIVATE).edit().putString("fb", s).apply();
     }
     @Override
