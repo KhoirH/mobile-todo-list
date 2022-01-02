@@ -16,7 +16,6 @@ public interface Todolist {
     @POST("todolist/create")
     Call<CreateUpdateDeleteTodolist> createTodolist(@Body com.example.todolist.Model.Todolist body);
 
-
     @POST("todolist/update")
     Call<CreateUpdateDeleteTodolist> editTodolist(@Body com.example.todolist.Model.Todolist body);
 

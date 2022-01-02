@@ -8,25 +8,19 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.example.todolist.Adapter.TodolistAdapter;
-import com.example.todolist.Model.CreateNotification;
-import com.example.todolist.Model.GetNotification;
 import com.example.todolist.Model.GetTodolist;
 import com.example.todolist.Rest.ApiClient;
 import com.example.todolist.Rest.ApiInterface.Notification;
 import com.example.todolist.Rest.ApiInterface.Todolist;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Debug;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -34,17 +28,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -58,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView itemsListView;
     String secret;
+    com.example.todolist.Model.Todolist todolistObj;
     Notification mApiInterfaceNotification;
     Todolist mApiTodolist;
     List<com.example.todolist.Model.Todolist> todolistList;
@@ -66,16 +58,22 @@ public class MainActivity extends AppCompatActivity {
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.3F);
     private static final String TAG = "MainActivity";
 
+    public void HandleOnClickTodolist(View v) {
+        Log.d("onclick", "tes");
+    }
     // get todo
     public void GetTodolist() {
         Call<GetTodolist> getTodolistCall = mApiTodolist.getTodolist(secret);
+
         getTodolistCall.enqueue(new Callback<GetTodolist>() {
             @Override
             public void onResponse(Call<GetTodolist> call, Response<GetTodolist> response) {
                 todolistList = response.body().getListTodolist();
 
                 TodolistAdapter adapter = new TodolistAdapter(getApplicationContext(), todolistList);
+
                 itemsListView.setAdapter(adapter);
+
             }
             @Override
             public void onFailure(Call<GetTodolist> call, Throwable t) {
@@ -105,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         mApiTodolist = ApiClient.getClient().create(Todolist.class);
 
+        ConstraintLayout listViewTodolist = findViewById(R.id.listViewTodolist);
 
        // Toolbar toolbar = findViewById(R.id.toolbar);
         // setSupportActionBar(toolbar);
@@ -173,8 +172,8 @@ public class MainActivity extends AppCompatActivity {
         dialogBuilder.setView(dialogView);
 
         final EditText judul = dialogView.findViewById(R.id.edit_title);
-        final TextView tanggal = dialogView.findViewById(R.id.date);
-        final TextView waktu = dialogView.findViewById(R.id.time);
+        final TextView tanggal = dialogView.findViewById(R.id.dateDetail);
+        final TextView waktu = dialogView.findViewById(R.id.timeDetail);
 
         final long date = System.currentTimeMillis();
         SimpleDateFormat dateSdf = new SimpleDateFormat("d MMMM");
