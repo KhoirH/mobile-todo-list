@@ -18,37 +18,37 @@ public class Todolist {
     private int status;
     @SerializedName("id_todolist")
     private int id_todolist;
-
-    public Todolist(int id, String title, String description, String secret, int type, int status, int id_todolist, String date, String[] detail_datetime, int type_scheduler) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.secret = secret;
-        this.type = type;
-        this.status = status;
-        this.id_todolist = id_todolist;
-        this.date = date;
-        this.detail_datetime = detail_datetime;
-        this.type_scheduler = type_scheduler;
-    }
-
     @SerializedName("date")
     private String date;
     @SerializedName("detail_datetime")
     private String[] detail_datetime;
     @SerializedName("type_scheduler")
     private int type_scheduler;
+    @SerializedName("time_scheduler")
+    private String time_sheduler;
 
-    public Todolist(int id, String title, String description, String secret, int type, int status, int id_todolist, String[] detail_datetime, int type_scheduler) {
+    public Todolist(int id)
+    {
         this.id = id;
+    }
+    public Todolist(String title, String description, String secret, int type, int status, String date, String[] detail_datetime, int type_scheduler, String time_sheduler) {
         this.title = title;
         this.description = description;
         this.secret = secret;
         this.type = type;
         this.status = status;
-        this.id_todolist = id_todolist;
+        this.date = date;
         this.detail_datetime = detail_datetime;
         this.type_scheduler = type_scheduler;
+        this.time_sheduler = time_sheduler;
+    }
+
+    public String getTime_sheduler() {
+        return time_sheduler;
+    }
+
+    public void setTime_sheduler(String time_sheduler) {
+        this.time_sheduler = time_sheduler;
     }
 
     public String getDate() {

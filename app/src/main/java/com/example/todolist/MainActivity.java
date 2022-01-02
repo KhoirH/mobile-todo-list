@@ -17,6 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
@@ -29,6 +30,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.CheckBox;
+
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView itemsListView;
     String secret;
+    com.example.todolist.Model.Todolist todolistObj;
     Notification mApiInterfaceNotification;
     Todolist mApiTodolist;
     List<com.example.todolist.Model.Todolist> todolistList;
@@ -64,13 +67,16 @@ public class MainActivity extends AppCompatActivity {
     // get todo
     public void GetTodolist() {
         Call<GetTodolist> getTodolistCall = mApiTodolist.getTodolist(secret);
+
         getTodolistCall.enqueue(new Callback<GetTodolist>() {
             @Override
             public void onResponse(Call<GetTodolist> call, Response<GetTodolist> response) {
                 todolistList = response.body().getListTodolist();
 
                 TodolistAdapter adapter = new TodolistAdapter(getApplicationContext(), todolistList);
+
                 itemsListView.setAdapter(adapter);
+
             }
             @Override
             public void onFailure(Call<GetTodolist> call, Throwable t) {
@@ -99,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
         itemsListView = findViewById(R.id.itemsList);
         fab = findViewById(R.id.fab);
         mApiTodolist = ApiClient.getClient().create(Todolist.class);
-
 
        // Toolbar toolbar = findViewById(R.id.toolbar);
         // setSupportActionBar(toolbar);
