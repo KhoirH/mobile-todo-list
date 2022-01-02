@@ -8,25 +8,18 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.example.todolist.Adapter.TodolistAdapter;
-import com.example.todolist.Model.CreateNotification;
-import com.example.todolist.Model.GetNotification;
 import com.example.todolist.Model.GetTodolist;
 import com.example.todolist.Rest.ApiClient;
 import com.example.todolist.Rest.ApiInterface.Notification;
 import com.example.todolist.Rest.ApiInterface.Todolist;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Debug;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -34,17 +27,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -61,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     Notification mApiInterfaceNotification;
     Todolist mApiTodolist;
     List<com.example.todolist.Model.Todolist> todolistList;
+    CheckBox CekSenin, CekSelasa, CekRabu, CekKamis, CekJumat, CekSabtu, CekMinggu;
 
     private FloatingActionButton fab;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.3F);
@@ -147,7 +142,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v){
                     v.startAnimation(buttonClick);
-                    showAddDialog();
+                    //showAddDialog();
+                    showChooseDialog();
                 }
             });
         } catch (Exception e){
@@ -158,23 +154,234 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        secret = getSharedPreferences("_", MODE_PRIVATE).getString("fb", "empty");
+        secret = getSharedPreferences("_", MODE_PRIVATE).getString("fb", "evnYtBBLfu448Nv9JZyZ9a:APA91bHdCd386C6Ato5_V0f6khPyOPVwIm4P0YJ3Ouluso-1F79O5yVdP3YRwjcJQ82_j84mz-BY5TLMNTNrl4vDa-ZIVKyG-NoXbRM9wcIle111Ia9Nd30P-MS3vtoTmAKf8y7I9E_Q");
 
         GetTodolist();
     }
 
+    private void showChooseDialog(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getLayoutInflater().getContext());
+        LayoutInflater inflater = this.getLayoutInflater();
+        @SuppressLint("InflateParams")
+        final View dialogBoxView= inflater.inflate(R.layout.todo_choose, null);
+        dialogBuilder.setView(dialogBoxView);
+
+        final Button onetime = dialogBoxView.findViewById(R.id.id_onetime);
+        final Button weekly = dialogBoxView.findViewById(R.id.id_weekly);
+
+        onetime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.startAnimation(buttonClick);
+                showAddDialogOneTime();
+            }
+        });
+
+        weekly.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                view.startAnimation(buttonClick);
+                ShowDialogWeekly();
+            }
+        });
+
+        dialogBuilder.setTitle("Pilih Aktivitas");
+
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+    }
+
+    private void ShowDialogWeekly() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getLayoutInflater().getContext());
+        LayoutInflater inflater = this.getLayoutInflater();
+        @SuppressLint("InflateParams") final View dialogBoxView = inflater.inflate(R.layout.custom_dialog_todo_repeat, null);
+        dialogBuilder.setView(dialogBoxView);
+
+        final EditText judulkegiatan = dialogBoxView.findViewById(R.id.edit_tugas);
+        final TextView waktupengingat = dialogBoxView.findViewById(R.id.edit_waktu);
+        final EditText desc = dialogBoxView.findViewById(R.id.edit_desc);
+//        CekSenin = (CheckBox) findViewById(R.id.checkBoxSenin);
+//        CekSelasa = (CheckBox) findViewById(R.id.checkBoxSelasa);
+//        CekRabu = (CheckBox) findViewById(R.id.checkBoxRabu);
+//        CekKamis = (CheckBox) findViewById(R.id.checkBoxKamis);
+//        CekJumat = (CheckBox) findViewById(R.id.checkBoxJumat);
+//        CekSabtu = (CheckBox) findViewById(R.id.checkBoxSabtu);
+//        CekMinggu = (CheckBox) findViewById(R.id.checkBoxMinggu);
+        final long date = System.currentTimeMillis();
+
+        SimpleDateFormat timeSdf = new SimpleDateFormat("hh : mm a");
+        String timeString = timeSdf.format(date);
+        waktupengingat.setText(timeString);
+
+        final Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(System.currentTimeMillis());
+
+        //set checkbox
+//        CekSenin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                    Toast.makeText(getApplication(), "Hari senin telah dipilih", Toast.LENGTH_LONG).show();
+//                }
+//        });
+//
+//        CekSelasa.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                    Toast.makeText(getApplication(), "Hari selasa telah dipilih", Toast.LENGTH_LONG).show();
+//            }
+//        });
+//
+//        CekRabu.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                    Toast.makeText(getApplication(), "Hari rabu telah dipilih", Toast.LENGTH_LONG).show();
+//            }
+//        });
+//
+//        CekKamis.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                    Toast.makeText(getApplication(), "Hari kamis telah dipilih", Toast.LENGTH_LONG).show();
+//            }
+//        });
+//
+//        CekJumat.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                    Toast.makeText(getApplication(), "Hari kamis telah dipilih", Toast.LENGTH_LONG).show();
+//            }
+//        });
+//
+//        CekSabtu.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                    Toast.makeText(getApplication(), "Hari sabtu telah dipilih", Toast.LENGTH_LONG).show();
+//            }
+//        });
+//
+//        CekMinggu.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                    Toast.makeText(getApplication(), "Hari minggu telah dipilih", Toast.LENGTH_LONG).show();
+//            }
+//        });
+
+
+        //Set waktu
+        waktupengingat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getLayoutInflater().getContext(),
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                String time;
+                                @SuppressLint("DefaultLocale") String minTime = String.format("%02d", minute);
+                                if (hourOfDay >= 0 && hourOfDay < 12) {
+                                    time = hourOfDay + " : " + minTime + " AM";
+                                } else {
+                                    if (hourOfDay != 12) {
+                                        hourOfDay = hourOfDay - 12;
+                                    }
+                                    time = hourOfDay + " : " + minTime + " PM";
+                                }
+                                waktupengingat.setText(time);
+                                cal.set(Calendar.HOUR, hourOfDay);
+                                cal.set(Calendar.MINUTE, minute);
+                                cal.set(Calendar.SECOND, 0);
+                                Log.d(TAG, "onTimeSet: Time has been set successfully");
+                            }
+                        }, cal.get(Calendar.HOUR), cal.get(MINUTE), false);
+                timePickerDialog.show();
+            }
+
+        });
+        dialogBuilder.setTitle("Buat tugas baru");
+        dialogBuilder.setPositiveButton("Tambah", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String title = judulkegiatan.getText().toString();
+                String waktu = waktupengingat.getText().toString();
+                String deskripsi = desc.getText().toString();
+                if (title.length() != 0) {
+                    try {
+                        //insertDataToDb(title, date, time);
+                        //scheduleNotification(getNotification(title), cal.getTimeInMillis());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    //toastMsg("Oops, Gak bisa kosong tugas nya.");
+                }
+            }
+        });
+
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+
+    }
+    public void onCheckboxClicked(View view){
+        boolean checked = ((CheckBox) view).isChecked();
+
+        switch(view.getId()){
+            case R.id.checkBoxSenin:
+                if(checked){
+                    Toast.makeText(getApplication(), "Hari senin telah dipilih", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.checkBoxSelasa:
+                if(checked){
+                    Toast.makeText(getApplication(), "Hari selasa telah dipilih", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.checkBoxRabu:
+                if(checked){
+                    Toast.makeText(getApplication(), "Hari rabu telah dipilih", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.checkBoxKamis:
+                if(checked){
+                    Toast.makeText(getApplication(), "Hari kamis telah dipilih", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.checkBoxJumat:
+                if(checked){
+                    Toast.makeText(getApplication(), "Hari jumat telah dipilih", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.checkBoxSabtu:
+                if(checked){
+                    Toast.makeText(getApplication(), "Hari sabtu telah dipilih", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.checkBoxMinggu:
+                if(checked){
+                    Toast.makeText(getApplication(), "Hari minggu telah dipilih", Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
     //Implementasi klik dari tombol tambah
     @SuppressLint("SimpleDateFormat")
-    private void showAddDialog() {
+    private void showAddDialogOneTime() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getLayoutInflater().getContext());
         LayoutInflater inflater = this.getLayoutInflater();
         @SuppressLint("InflateParams")
         final View dialogView = inflater.inflate(R.layout.custom_dialog_todo, null);
         dialogBuilder.setView(dialogView);
 
-        final EditText judul = dialogView.findViewById(R.id.edit_title);
+        final EditText judul = dialogView.findViewById(R.id.edit_tugas);
         final TextView tanggal = dialogView.findViewById(R.id.date);
-        final TextView waktu = dialogView.findViewById(R.id.time);
+        final TextView waktu = dialogView.findViewById(R.id.edit_waktu);
 
         final long date = System.currentTimeMillis();
         SimpleDateFormat dateSdf = new SimpleDateFormat("d MMMM");
