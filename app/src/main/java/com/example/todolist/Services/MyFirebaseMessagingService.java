@@ -37,7 +37,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
-
+        Log.e("test", s);
         Call<CreateNotification> createNotificationCall = mApiNotification.createNotification(new com.example.todolist.Model.Notification(s));
         createNotificationCall.enqueue(new Callback<CreateNotification>() {
             @Override
@@ -46,6 +46,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             @Override
             public void onFailure(Call<CreateNotification> call, Throwable t) {
+                Log.e("error", t.getMessage());
             }
         });
         getSharedPreferences("_", MODE_PRIVATE).edit().putString("fb", s).apply();

@@ -17,6 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -36,6 +37,8 @@ import android.widget.TimePicker;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -52,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     com.example.todolist.Model.Todolist todolistObj;
     Notification mApiInterfaceNotification;
     Todolist mApiTodolist;
-    List<com.example.todolist.Model.Todolist> todolistList;
+    List<com.example.todolist.Model.Todolist> todolistList = new ArrayList<>();
 
     private FloatingActionButton fab;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.3F);
@@ -60,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
     // get todo
     public void GetTodolist() {
+        if(secret == "empty"){
+            secret = getSharedPreferences("_", MODE_PRIVATE).getString("fb", "empty");
+        }
         Call<GetTodolist> getTodolistCall = mApiTodolist.getTodolist(secret);
 
         getTodolistCall.enqueue(new Callback<GetTodolist>() {
@@ -100,16 +106,19 @@ public class MainActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         mApiTodolist = ApiClient.getClient().create(Todolist.class);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
        // Toolbar toolbar = findViewById(R.id.toolbar);
-        // setSupportActionBar(toolbar);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+//        // setSupportActionBar(toolbar);
+////        fab.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View view) {
+////
+////                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+////                        .setAction("Action", null).show();
+////            }
+////        });
         
           onFabClick();
           hideFab();
@@ -274,26 +283,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
 }

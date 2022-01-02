@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.todolist.Model.CreateUpdateDeleteTodolist;
-import com.example.todolist.Model.GetTodolist;
 import com.example.todolist.Rest.ApiClient;
 import com.example.todolist.Rest.ApiInterface.Todolist;
 
@@ -49,7 +48,7 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView titleTextview = findViewById(R.id.titleDetail);
         TextView timeTextview = findViewById(R.id.timeDetail);
-        TextView descriptionTextview = findViewById(R.id.descriptionDetail);
+        TextView descriptionTextview = findViewById(R.id.dateTodolist);
         TextView dateTextview = findViewById(R.id.dateDetail);
         TextView typeTextview = findViewById(R.id.typeDetail);
         TextView statusTextview = findViewById(R.id.statusDetail);
@@ -89,7 +88,7 @@ public class DetailActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         getApplicationContext().startActivity(intent);
                     }
 

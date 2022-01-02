@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">todolist</string>
+    <string name="app_name">Todolist</string>
     <string name="action_settings">Settings</string>
     <string name="default_notification_channel_id">Notif</string>
     <!-- Strings used for fragments for navigation -->
