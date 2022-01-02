@@ -58,9 +58,6 @@ public class MainActivity extends AppCompatActivity {
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.3F);
     private static final String TAG = "MainActivity";
 
-    public void HandleOnClickTodolist(View v) {
-        Log.d("onclick", "tes");
-    }
     // get todo
     public void GetTodolist() {
         Call<GetTodolist> getTodolistCall = mApiTodolist.getTodolist(secret);
@@ -102,8 +99,6 @@ public class MainActivity extends AppCompatActivity {
         itemsListView = findViewById(R.id.itemsList);
         fab = findViewById(R.id.fab);
         mApiTodolist = ApiClient.getClient().create(Todolist.class);
-
-        ConstraintLayout listViewTodolist = findViewById(R.id.listViewTodolist);
 
        // Toolbar toolbar = findViewById(R.id.toolbar);
         // setSupportActionBar(toolbar);

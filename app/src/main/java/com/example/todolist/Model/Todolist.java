@@ -27,7 +27,10 @@ public class Todolist {
     @SerializedName("time_scheduler")
     private String time_sheduler;
 
-
+    public Todolist(int id)
+    {
+        this.id = id;
+    }
     public Todolist(String title, String description, String secret, int type, int status, String date, String[] detail_datetime, int type_scheduler, String time_sheduler) {
         this.title = title;
         this.description = description;
