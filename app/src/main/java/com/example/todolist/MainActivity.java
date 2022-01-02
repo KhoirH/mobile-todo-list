@@ -7,10 +7,13 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.example.todolist.Adapter.TodolistAdapter;
 import com.example.todolist.Model.CreateNotification;
 import com.example.todolist.Model.GetNotification;
+import com.example.todolist.Model.GetTodolist;
 import com.example.todolist.Rest.ApiClient;
 import com.example.todolist.Rest.ApiInterface.Notification;
+import com.example.todolist.Rest.ApiInterface.Todolist;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -19,7 +22,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Debug;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -51,18 +57,55 @@ import static java.util.Calendar.MINUTE;
 public class MainActivity extends AppCompatActivity {
 
     private ListView itemsListView;
-
+    String secret;
     Notification mApiInterfaceNotification;
+    Todolist mApiTodolist;
+    List<com.example.todolist.Model.Todolist> todolistList;
+
     private FloatingActionButton fab;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.3F);
     private static final String TAG = "MainActivity";
 
+    // get todo
+    public void GetTodolist() {
+        Call<GetTodolist> getTodolistCall = mApiTodolist.getTodolist(secret);
+        getTodolistCall.enqueue(new Callback<GetTodolist>() {
+            @Override
+            public void onResponse(Call<GetTodolist> call, Response<GetTodolist> response) {
+                todolistList = response.body().getListTodolist();
+
+                TodolistAdapter adapter = new TodolistAdapter(getApplicationContext(), todolistList);
+                itemsListView.setAdapter(adapter);
+            }
+            @Override
+            public void onFailure(Call<GetTodolist> call, Throwable t) {
+
+                Log.d("error", String.valueOf(todolistList.size()));
+            }
+        });
+    }
+    public void handleRefresh() {
+        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                GetTodolist();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
+    }
+
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        secretStorage = new SecretStorage(this);
+//        secretStorage.readSecret();
 
         itemsListView = findViewById(R.id.itemsList);
         fab = findViewById(R.id.fab);
+        mApiTodolist = ApiClient.getClient().create(Todolist.class);
+
+
        // Toolbar toolbar = findViewById(R.id.toolbar);
         // setSupportActionBar(toolbar);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -73,11 +116,11 @@ public class MainActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
+        
           onFabClick();
           hideFab();
-
+          handleRefresh();
     }
-
 
     //menyembunyikan tombol floating tambah pada sat listview scroll
     private void hideFab(){
@@ -115,7 +158,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        FirebaseMessaging.getInstance().getToken();
+        secret = getSharedPreferences("_", MODE_PRIVATE).getString("fb", "empty");
+
+        GetTodolist();
     }
 
     //Implementasi klik dari tombol tambah
