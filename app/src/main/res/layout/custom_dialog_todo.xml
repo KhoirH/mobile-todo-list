@@ -25,7 +25,7 @@
             android:src="@drawable/ic_judul" />
 
         <EditText
-            android:id="@+id/edit_title"
+            android:id="@+id/edit_tugas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -57,6 +57,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/timeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/dateLayout"
@@ -69,11 +70,35 @@
             android:background="@drawable/ic_waktu" />
 
         <TextView
-            android:id="@+id/time"
+            android:id="@+id/edit_waktu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Waktu"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:text="Waktu" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/timeLayout"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp"
+            android:text="Description" />
+
+        <EditText
+            android:id="@+id/edit_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:inputType="text"
+            tools:ignore="Autofill" />
+
     </LinearLayout>
 </RelativeLayout>

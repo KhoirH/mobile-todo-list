@@ -1,6 +1,187 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:divider="@null"
+    android:dividerPadding="0dp"
+    android:orientation="vertical"
+    android:padding="10dp"
+    app:layout_constraintCircleRadius="8dp"
+    tools:ignore="UseCompoundDrawables,
+    ContentDescription,HardcodedText">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginLeft="18dp"
+            android:src="@drawable/ic_judul" />
+
+        <EditText
+            android:id="@+id/edit_tugas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:hint="Tugas"
+            android:inputType="text"
+            tools:ignore="Autofill" />
+    </LinearLayout>
+
+
+    <LinearLayout
+
+        android:id="@+id/dayLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleLayout"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/hari"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set Hari"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxSenin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp"
+            android:minHeight="48dp"
+            android:onClick="onCheckboxClicked"
+            android:text="Setiap Senin" />
+
+        <CheckBox
+            android:id="@+id/checkBoxSelasa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp"
+            android:minHeight="48dp"
+            android:onClick="onCheckboxClicked"
+            android:text="Setiap Selasa" />
+
+        <CheckBox
+            android:id="@+id/checkBoxRabu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp"
+            android:minHeight="48dp"
+            android:onClick="onCheckboxClicked"
+            android:text="Setiap Rabu" />
+
+        <CheckBox
+            android:id="@+id/checkBoxKamis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp"
+            android:minHeight="48dp"
+            android:onClick="onCheckboxClicked"
+            android:text="Setiap Kamis" />
+
+        <CheckBox
+            android:id="@+id/checkBoxJumat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp"
+            android:minHeight="48dp"
+            android:onClick="onCheckboxClicked"
+            android:text="Setiap Jumat" />
+
+        <CheckBox
+            android:id="@+id/checkBoxSabtu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp"
+            android:minHeight="48dp"
+            android:onClick="onCheckboxClicked"
+            android:text="Setiap Sabtu" />
+
+        <CheckBox
+            android:id="@+id/checkBoxMinggu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp"
+            android:minHeight="48dp"
+            android:onClick="onCheckboxClicked"
+            android:text="Setiap Minggu" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/timeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dayLayout"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginLeft="18dp"
+            android:background="@drawable/ic_waktu" />
+
+        <TextView
+            android:id="@+id/edit_waktu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Waktu"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/timeLayout"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp" />
+
+        <EditText
+            android:id="@+id/edit_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:inputType="text"
+            tools:ignore="Autofill" />
+
+    </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

@@ -37,7 +37,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
-        Log.e("test", s);
         Call<CreateNotification> createNotificationCall = mApiNotification.createNotification(new com.example.todolist.Model.Notification(s));
         createNotificationCall.enqueue(new Callback<CreateNotification>() {
             @Override

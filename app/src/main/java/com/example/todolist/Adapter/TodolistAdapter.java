@@ -55,7 +55,7 @@ public class TodolistAdapter extends ArrayAdapter<Todolist> {
                 intent.putExtra("Title", td.getTitle());
                 intent.putExtra("Descirption", td.getDescription());
                 intent.putExtra("Date", td.getDetail_datetime());
-                intent.putExtra("Time", td.getTime_sheduler());
+                intent.putExtra("Time", td.getTime_scheduler());
                 intent.putExtra("Status", td.getStatus());
                 intent.putExtra("Type", td.getType());
                 intent.putExtra("Id", td.getId());
