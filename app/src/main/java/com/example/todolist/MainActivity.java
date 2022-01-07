@@ -57,11 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView itemsListView;
     String secret;
-    com.example.todolist.Model.Todolist todolistObj;
-    Notification mApiInterfaceNotification;
     Todolist mApiTodolist;
     List<com.example.todolist.Model.Todolist> todolistList = new ArrayList<>();
-    CheckBox CekSenin, CekSelasa, CekRabu, CekKamis, CekJumat, CekSabtu, CekMinggu;
 
     private FloatingActionButton fab;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.3F);
@@ -72,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         if(secret == "empty"){
             secret = getSharedPreferences("_", MODE_PRIVATE).getString("fb", "empty");
         }
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.pullToRefresh);
+        swipeRefreshLayout.setRefreshing(true);
         Call<GetTodolist> getTodolistCall = mApiTodolist.getTodolist(secret);
 
         getTodolistCall.enqueue(new Callback<GetTodolist>() {
@@ -82,12 +81,14 @@ public class MainActivity extends AppCompatActivity {
                 TodolistAdapter adapter = new TodolistAdapter(getApplicationContext(), todolistList);
 
                 itemsListView.setAdapter(adapter);
-
+                swipeRefreshLayout.setRefreshing(false);
             }
             @Override
             public void onFailure(Call<GetTodolist> call, Throwable t) {
 
                 Log.d("error", String.valueOf(todolistList.size()));
+
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -168,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        secret = getSharedPreferences("_", MODE_PRIVATE).getString("fb", "evnYtBBLfu448Nv9JZyZ9a:APA91bHdCd386C6Ato5_V0f6khPyOPVwIm4P0YJ3Ouluso-1F79O5yVdP3YRwjcJQ82_j84mz-BY5TLMNTNrl4vDa-ZIVKyG-NoXbRM9wcIle111Ia9Nd30P-MS3vtoTmAKf8y7I9E_Q");
+        secret = getSharedPreferences("_", MODE_PRIVATE).getString("fb", "empty");
 
         GetTodolist();
     }
@@ -265,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
                 String deskripsi = desc.getText().toString();
                 String date = String.join(",", daysActive);
                 if (title.length() != 0) {
-                    com.example.todolist.Model.Todolist todolist = new com.example.todolist.Model.Todolist(title, deskripsi, secret, 0, 1, date, waktu );
+                    com.example.todolist.Model.Todolist todolist = new com.example.todolist.Model.Todolist(title, deskripsi, secret, 1, 1, date, waktu );
                     Call<CreateUpdateDeleteTodolist> createTodolistCall = mApiTodolist.createTodolist(todolist);
 
                     createTodolistCall.enqueue(new Callback<CreateUpdateDeleteTodolist>() {
@@ -401,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
                                 int newMonth = monthOfYear + 1;
                                 String monthView = "" + newMonth;
                                 if(newMonth < 10) {
-                                    monthView = "0" + dayOfMonth;
+                                    monthView = "0" + newMonth;
                                 }
                                 String dayViewOfMonth = "" + dayOfMonth;
                                 if(dayOfMonth < 10) {
