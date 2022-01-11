@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 
 public interface Todolist {
     @GET("todolist")
-    Call<GetTodolist> getTodolist(@Query("secret") String secret);
+    Call<GetTodolist> getTodolist(@Query("secret") String secret, @Query("type") int type);
 
     @POST("todolist/create")
     Call<CreateUpdateDeleteTodolist> createTodolist(@Body com.example.todolist.Model.Todolist body);

@@ -48,7 +48,7 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView titleTextview = findViewById(R.id.titleDetail);
         TextView timeTextview = findViewById(R.id.timeDetail);
-        TextView descriptionTextview = findViewById(R.id.dateTodolist);
+        TextView descriptionTextview = findViewById(R.id.dateTextDaily);
         TextView dateTextview = findViewById(R.id.dateDetail);
         TextView typeTextview = findViewById(R.id.typeDetail);
         TextView statusTextview = findViewById(R.id.statusDetail);

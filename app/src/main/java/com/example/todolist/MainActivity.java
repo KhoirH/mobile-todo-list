@@ -2,8 +2,10 @@ package com.example.todolist;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -13,7 +15,9 @@ import com.example.todolist.Model.GetTodolist;
 import com.example.todolist.Rest.ApiClient;
 import com.example.todolist.Rest.ApiInterface.Notification;
 import com.example.todolist.Rest.ApiInterface.Todolist;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -22,6 +26,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -34,6 +39,7 @@ import android.widget.CheckBox;
 
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -41,10 +47,12 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.DateFormatSymbols;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -58,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView itemsListView;
     String secret;
     Todolist mApiTodolist;
+    int ActiveType = 0;
     List<com.example.todolist.Model.Todolist> todolistList = new ArrayList<>();
 
     private FloatingActionButton fab;
@@ -71,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         }
         SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.pullToRefresh);
         swipeRefreshLayout.setRefreshing(true);
-        Call<GetTodolist> getTodolistCall = mApiTodolist.getTodolist(secret);
+        Call<GetTodolist> getTodolistCall = mApiTodolist.getTodolist(secret, ActiveType);
 
         getTodolistCall.enqueue(new Callback<GetTodolist>() {
             @Override
@@ -103,35 +112,60 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private Date stringToDate(String aDate, String aFormat) {
+
+        if(aDate==null) return null;
+        ParsePosition pos = new ParsePosition(0);
+        SimpleDateFormat simpledateformat = new SimpleDateFormat(aFormat);
+        Date stringDate = simpledateformat.parse(aDate, pos);
+        return stringDate;
+
+    }
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        secretStorage = new SecretStorage(this);
-//        secretStorage.readSecret();
 
         itemsListView = findViewById(R.id.itemsList);
         fab = findViewById(R.id.fab);
         mApiTodolist = ApiClient.getClient().create(Todolist.class);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
         setSupportActionBar(toolbar);
-        setSupportActionBar(toolbar);
-       // Toolbar toolbar = findViewById(R.id.toolbar);
-//        // setSupportActionBar(toolbar);
-////        fab.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View view) {
-////
-////                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-////                        .setAction("Action", null).show();
-////            }
-////        });
+        mTitle.setText(toolbar.getTitle());
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         
           onFabClick();
           hideFab();
           handleRefresh();
+          View dailyButton = findViewById(R.id.dailybutton);
+          handleChangeButton(dailyButton);
     }
+    private void handleChangeButton(View v) {
+        Button nonActiveButton;
+        Button activeButton = findViewById(v.getId());
+        if(ActiveType == 1) {
+            nonActiveButton = findViewById(R.id.dailybutton);
+        } else {
+            nonActiveButton = findViewById(R.id.weeklybutton);
+        }
+        activeButton.setBackgroundColor(getResources().getColor(R.color.colorBtn));
+        activeButton.setTextColor(getResources().getColor(R.color.white));
+        nonActiveButton.setBackgroundColor(getResources().getColor(R.color.white));
+        nonActiveButton.setTextColor(getResources().getColor(R.color.black));
+    }
+    public void handleChangeType(View view) {
+        int id = view.getId();
 
+        if(id == R.id.weeklybutton) {
+            ActiveType = 1;
+        } else {
+            ActiveType = 0;
+        }
+        GetTodolist();
+        handleChangeButton(view);
+    }
     //menyembunyikan tombol floating tambah pada sat listview scroll
     private void hideFab(){
         itemsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -175,12 +209,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showChooseDialog(){
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getLayoutInflater().getContext());
         LayoutInflater inflater = this.getLayoutInflater();
-        @SuppressLint("InflateParams")
         final View dialogBoxView= inflater.inflate(R.layout.todo_choose, null);
-        dialogBuilder.setView(dialogBoxView);
-
         final Button onetime = dialogBoxView.findViewById(R.id.id_onetime);
         final Button weekly = dialogBoxView.findViewById(R.id.id_weekly);
 
@@ -199,16 +229,12 @@ public class MainActivity extends AppCompatActivity {
                 ShowDialogWeekly();
             }
         });
-
-        dialogBuilder.setTitle("Pilih Aktivitas");
-
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog b = dialogBuilder.create();
-        b.show();
+        final Dialog mBottomSheetDialog = new Dialog(this, R.style.MaterialDialogSheet);
+        mBottomSheetDialog.setContentView(dialogBoxView); // your custom view.
+        mBottomSheetDialog.setCancelable(true);
+        mBottomSheetDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        mBottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM);
+        mBottomSheetDialog.show();
     }
 
     List<String> daysActive = new ArrayList<>();
@@ -363,6 +389,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     //Implementasi klik dari tombol tambah
+
+    String textTanggal, textWaktu, textHari;
     @SuppressLint("SimpleDateFormat")
     private void showAddDialogOneTime() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getLayoutInflater().getContext());
@@ -370,20 +398,21 @@ public class MainActivity extends AppCompatActivity {
         @SuppressLint("InflateParams")
         final View dialogView = inflater.inflate(R.layout.custom_dialog_todo, null);
         dialogBuilder.setView(dialogView);
-
-        final EditText judul = dialogView.findViewById(R.id.edit_tugas);
-        final TextView tanggal = dialogView.findViewById(R.id.date);
-        final TextView waktu = dialogView.findViewById(R.id.edit_waktu);
-        final TextView descView = dialogView.findViewById(R.id.edit_desc);
+        final TextInputEditText judul = dialogView.findViewById(R.id.edit_tugas);
+        final MaterialButton tanggal = dialogView.findViewById(R.id.edit_date);
+        final MaterialButton waktu = dialogView.findViewById(R.id.edit_waktu);
+        final TextInputEditText descView = dialogView.findViewById(R.id.edit_desc);
 
 
         final long date = System.currentTimeMillis();
-        SimpleDateFormat dateSdf = new SimpleDateFormat("DD - MM - YYYY");
+        SimpleDateFormat dateSdf = new SimpleDateFormat("DD MMM yyyy");
         String dateString = dateSdf.format(date);
+        textTanggal = new SimpleDateFormat("dd-MM-yyyy").format(date);
         tanggal.setText(dateString);
 
-        SimpleDateFormat timeSdf = new SimpleDateFormat("HH : mm");
+        SimpleDateFormat timeSdf = new SimpleDateFormat("hh:mm aaa");
         String timeString = timeSdf.format(date);
+        textWaktu = new SimpleDateFormat("HH:mm").format(date);
         waktu.setText(timeString);
 
         final Calendar cal = Calendar.getInstance();
@@ -408,7 +437,10 @@ public class MainActivity extends AppCompatActivity {
                                 if(dayOfMonth < 10) {
                                     dayViewOfMonth = "0" + dayOfMonth;
                                 }
-                                tanggal.setText(dayViewOfMonth + " - " + monthView + " - " + year);
+                                textTanggal = dayViewOfMonth + "-" + monthView + "-" + year;
+                                Date dateText = stringToDate(textTanggal, "dd-MM-yyyy");
+                                String tanggalShow = new SimpleDateFormat("DD MMM yyyy").format(dateText);
+                                tanggal.setText(tanggalShow);
                                 cal.set(Calendar.YEAR, year);
                                 cal.set(Calendar.MONTH, monthOfYear);
                                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -433,8 +465,13 @@ public class MainActivity extends AppCompatActivity {
                                 if(hourOfDay < 10 ) {
                                     hourOfDayView = "0" + hourOfDay ;
                                 }
-                                time = hourOfDayView + " : " + minTime;
-                                waktu.setText(time);
+                                textWaktu = hourOfDayView + ":" + minTime;
+                                Date timeText = stringToDate(textWaktu, "HH:mm");
+                                String waktuShow = new SimpleDateFormat("hh:mm aaa").format(timeText);
+
+                                waktu.setText(waktuShow);
+
+
                                 cal.set(Calendar.HOUR, hourOfDay);
                                 cal.set(Calendar.MINUTE, minute);
                                 cal.set(Calendar.SECOND, 0);
@@ -450,8 +487,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String title = judul.getText().toString();
                 String desc = descView.getText().toString();
-                String date = tanggal.getText().toString().replaceAll(" ", "");
-                String time = waktu.getText().toString().replaceAll(" ", "");
+                String date = textTanggal;
+                String time = textWaktu;
                 if (title.length() != 0) {
                     com.example.todolist.Model.Todolist todolist = new com.example.todolist.Model.Todolist(title, desc, secret, 0, 1, date, time );
                     Call<CreateUpdateDeleteTodolist> createTodolistCall = mApiTodolist.createTodolist(todolist);

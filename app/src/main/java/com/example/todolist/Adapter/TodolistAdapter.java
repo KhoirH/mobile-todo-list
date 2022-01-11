@@ -15,6 +15,10 @@ import com.example.todolist.DetailActivity;
 import com.example.todolist.Model.Todolist;
 import com.example.todolist.R;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TodolistAdapter extends ArrayAdapter<Todolist> {
@@ -22,7 +26,15 @@ public class TodolistAdapter extends ArrayAdapter<Todolist> {
     public TodolistAdapter(@NonNull Context context, @NonNull List<Todolist> objects) {
         super(context, 0, objects);
     }
+    private Date stringToDate(String aDate,String aFormat) {
 
+        if(aDate==null) return null;
+        ParsePosition pos = new ParsePosition(0);
+        SimpleDateFormat simpledateformat = new SimpleDateFormat(aFormat);
+        Date stringDate = simpledateformat.parse(aDate, pos);
+        return stringDate;
+
+    }
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -30,21 +42,18 @@ public class TodolistAdapter extends ArrayAdapter<Todolist> {
         Todolist td = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.todo_content, parent, false);
+            if(td.getType() == 1) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.todo_content_weekly, parent, false);
+            } else {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.todo_content_daily, parent, false);
+            }
         }
 
-        String TypeText = "One time";
-        if(td.getType() == 1) {
-            TypeText = "Weekly";
-        }
-
-
-        String DateText = " | " + String.join(", ", td.getDetail_datetime());
-
+        String timeText, dateText;
+        String DateText = String.join(", ", td.getDetail_datetime());
         TextView titleView = convertView.findViewById(R.id.title);
-        TextView typeView  = convertView.findViewById(R.id.typeTodolist);
-        TextView dateView  = convertView.findViewById(R.id.dateTodolist);
-
+        TextView dateView  = convertView.findViewById(R.id.dateTextDaily);
+        TextView timeView = convertView.findViewById(R.id.timeTextDaily);
         convertView.setClickable(true);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,9 +72,24 @@ public class TodolistAdapter extends ArrayAdapter<Todolist> {
                 getContext().startActivity(intent);
             }
         });
-        typeView.setText(TypeText);
-        dateView.setText(DateText);
+
+        Date time = stringToDate(td.getTime_scheduler(), "HH:mm");
+        timeText = new SimpleDateFormat("hh:mm aaa").format(time);
+
+        if(td.getType() == 0) {
+            Date date = stringToDate(DateText, "dd-MM-yyyy");
+            dateText = new SimpleDateFormat("DD MMM").format(date);
+        } else {
+            List<String> newDateText = new ArrayList<>();;
+            for(int i = 0; i < td.getDetail_datetime().length; i++){
+                newDateText.add(td.getDetail_datetime()[i].substring(0, 3));
+            }
+            dateText = String.join(", ", newDateText);
+        }
+
         titleView.setText(td.getTitle());
+        dateView.setText(dateText);
+        timeView.setText(timeText);
         return convertView;
     }
 }

@@ -3,37 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
-    <Button
-        android:id="@+id/id_onetime"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/wrapButtonChoose1"
         android:layout_width="0dp"
-        android:layout_height="52dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="21dp"
-        android:background="@android:color/holo_blue_dark"
-        android:text="One Time"
-        android:textColor="@android:color/white"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/id_weekly"
+        app:layout_constraintEnd_toStartOf="@+id/wrapButtonChoose2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/id_weekly"
+        <Button
+            android:id="@+id/id_onetime"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@color/colorBtn"
+            android:text="Daily"
+            android:textColor="@android:color/white"
+            tools:layout_editor_absoluteX="205dp" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/wrapButtonChoose2"
         android:layout_width="0dp"
-        android:layout_height="53dp"
-        android:layout_marginStart="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:background="@android:color/holo_blue_dark"
-        android:text="Weekly"
-        android:textColor="@android:color/white"
+        app:cardCornerRadius="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/id_onetime"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/wrapButtonChoose1"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/id_weekly"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@color/colorBtn"
+            android:text="Weekly"
+            android:textColor="@android:color/white"
+            tools:layout_editor_absoluteX="303dp"
+            tools:layout_editor_absoluteY="20dp" />
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
