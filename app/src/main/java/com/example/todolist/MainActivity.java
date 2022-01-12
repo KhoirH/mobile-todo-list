@@ -250,8 +250,12 @@ public class MainActivity extends AppCompatActivity {
 
         final long date = System.currentTimeMillis();
 
-        SimpleDateFormat timeSdf = new SimpleDateFormat("HH : mm");
+//        SimpleDateFormat timeSdf = new SimpleDateFormat("HH : mm");
+//        String timeString = timeSdf.format(date);
+//        waktupengingat.setText(timeString);
+        SimpleDateFormat timeSdf = new SimpleDateFormat("hh:mm aaa");
         String timeString = timeSdf.format(date);
+        textWaktu = new SimpleDateFormat("HH:mm").format(date);
         waktupengingat.setText(timeString);
 
         final Calendar cal = Calendar.getInstance();
@@ -272,8 +276,11 @@ public class MainActivity extends AppCompatActivity {
                                 if(hourOfDay < 10 ) {
                                     hourOfDayView = "0" + hourOfDay ;
                                 }
-                                time = hourOfDayView + " : " + minTime;
-                                waktupengingat.setText(time);
+                                textWaktu = hourOfDayView + ":" + minTime;
+                                Date timeText = stringToDate(textWaktu, "HH:mm");
+                                String waktuShow = new SimpleDateFormat("hh:mm aaa").format(timeText);
+                                waktupengingat.setText(waktuShow);
+
                                 cal.set(Calendar.HOUR, hourOfDay);
                                 cal.set(Calendar.MINUTE, minute);
                                 cal.set(Calendar.SECOND, 0);
@@ -288,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
         dialogBuilder.setPositiveButton("Tambah", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String title = judulkegiatan.getText().toString();
-                String waktu = waktupengingat.getText().toString().replaceAll(" ", "");
+                String waktu = textWaktu;
                 String deskripsi = desc.getText().toString();
                 String date = String.join(",", daysActive);
                 if (title.length() != 0) {
